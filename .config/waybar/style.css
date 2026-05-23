@@ -1,0 +1,51 @@
+* {
+  border: none;
+  border-radius: 0px;
+  font-family: "Maple Mono";
+  /*font-weight: bold;*/
+  font-size: 14px;
+  min-height: 0;
+  color: #ebdbb2;
+  color: #ccc8bb;
+  margin: 0;
+  padding: 0;
+}
+
+window#waybar {
+  background: #202022;
+}
+
+/* Workspace Buttons */
+#workspaces button label{
+  padding: 0 15px;
+}
+
+#workspaces button.active label {
+  color: #1d2021;
+}
+
+#workspaces button:hover {
+  background: #3c3836;
+}
+
+#workspaces button.active {
+  background: #d65530;
+}
+
+#temperature {
+  color: #22aa33;
+}
+
+/*
+#cpu {
+  color: #dd6644;
+}
+
+#memory {
+  color: #ee6644;
+}
+
+#pulseaudio {
+  color: #30b040;
+}
+*/

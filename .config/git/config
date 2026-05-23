@@ -1,0 +1,20 @@
+[user]
+  name = Alexander Gusev
+  email = fffmail4k@gmail.com
+
+[core]
+  autocrlf = input
+  compression = 9
+  fsync = none
+  whitespace = error
+  preloadindex = true
+	editor = nvim
+
+[init]
+  defaultBranch = main
+
+[commit]
+  gpgsign = true
+
+[tag]
+  gpgsign = true

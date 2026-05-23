@@ -1,0 +1,37 @@
+{
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "host",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "de",
+    "wm",
+    "terminal",
+    "terminalfont",
+    //"font",
+    //"cursor",
+    {
+      "type": "display",
+      "format": "{1}x{2} @ {3}Hz",
+      "maxSize": 2
+    },
+    {
+    "type": "cpu",
+    "format": "{1}",
+    "freqNdigits": 1
+    },
+    "gpu",
+    "memory",
+    "disk",
+    //"swap",
+    //"localip",
+    "battery",
+    "poweradapter",
+    "break",
+    //"colors"
+  ]
+}

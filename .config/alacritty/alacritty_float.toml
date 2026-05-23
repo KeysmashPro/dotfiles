@@ -1,0 +1,25 @@
+[window]
+padding.x = 5
+padding.y = 5
+decorations = "Full"
+#opacity = 0.8
+
+
+[colors.primary]
+background = "0x0F0F0F"
+foreground = "0xdddddd"
+
+[font]
+size = 10.6
+
+[keyboard]
+bindings = [
+  #{ key = "C", mods = "Control|Shift", action = "Copy" },
+  #{ key = "V", mods = "Control|Shift", action = "Paste" },
+  { key = 'PageUp',  action = 'ScrollLineUp' },
+  { key = 'PageDown', action = 'ScrollLineDown' },
+  { key = 'PageUp', mods = "Shift", action = 'ScrollHalfPageUp' },
+  { key = 'PageDown', mods = "Shift", action = 'ScrollHalfPageDown' },
+  { key = 'PageUp', mods = "Control", action = 'ScrollToTop' },
+  { key = 'PageDown', mods = "Control", action = 'ScrollToBottom' }
+]
