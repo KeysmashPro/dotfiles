@@ -1,5 +1,21 @@
 autoload -U colors && colors
-PROMPT='[%n@%m]%20<...<%<<$ ' PROMPT='%F{green}%~%f%F{green}>%f '
+#PROMPT='[%n@%m]%20<...<%<<$ '
+#PROMPT='%F{green}%~%f%F{green}>%f '
+#PROMPT='%F{green}%64<...<%~%<<%f%F{green}>%f '
+
+setopt PROMPT_SUBST
+PROMPT='%F{green}$(smart_pwd)%f%F{green}>%f '
+
+smart_pwd() {
+    local pwd_str="${PWD/#$HOME/~}"
+    if [[ ${#pwd_str} -gt 64 ]]; then
+        echo "...${pwd_str: -61}"
+    else
+        echo "$pwd_str"
+    fi
+}
+
+
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
@@ -13,28 +29,53 @@ _comp_options+=(globdots)
 # vi mode
 bindkey -v
 export KEYTIMEOUT=1
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 # aliases
-alias shutdown='shutdown now'
-alias poweroff='doas poweroff'
-alias reboot='doas reboot'
 alias nv='nvim'
-
-# xbps aliases
+alias reboot='doas reboot'
+alias poweroff='doas poweroff'
 alias xi='doas xbps-install'
-alias xr='doas xbps-remove -R'
+alias xr='doas xbps-remove'
 alias xq='xbps-query'
+
+# git aliases
 alias gs='git status --short'
+alias ga='git add'
+alias gap='ga --patch'
+alias gb='git branch'
+alias gba='gb --all'
+alias gc='git commit'
+alias gca='gc --amend --no-edit'
+alias gce='gc --amend'
+alias gco='git checkout'
+alias gcl='git clone --recursive'
+alias gd='git diff --output-indicator-new=" " --output-indicator-old=" "'
+alias gds='gd --staged'
+alias gi='git init'
+alias gl='git log --graph --all --pretty=format:"%C(magenta)%h %C(white) %an  %ar%C(auto)  %D%n%s%n"'
+alias gm='git merge'
+alias gn='git checkout -b'  # new branch
+alias gp='git push'
+alias gr='git reset'
+alias gs='git status --short'
+alias gu='git pull'
+alias gw='git switch'
 
 # portage aliases
-alias makeconf='doas bob run nightly /etc/portage/make.conf'
+alias makeconf='doasedit /etc/portage/make.conf'
 alias dispatch-conf='doas dispatch-conf'
 alias emerge='doas emerge'
 alias eselect='doas eselect'
 alias eclean-dist='doas eclean-dist'
 alias eclean-kernel='doas eclean-kernel'
 alias eclean-pkg='doas eclean-pkg'
-alias ecleand='doas eclean-pkg -d; doas eclean-dist -d; doas eclean-kernel -n 1' alias ecleandp='doas eclean-pkg -dp; doas eclean-dist -dp; doas eclean-kernel -p -n 1' alias es='doas emerge --search' alias ei='doas emerge -av' alias ess='doas emerge --sync'
+alias ecleand='doas eclean-pkg -d; doas eclean-dist -d; doas eclean-kernel -n 1' 
+alias ecleandp='doas eclean-pkg -dp; doas eclean-dist -dp; doas eclean-kernel -p -n 1' 
+alias es='doas emerge --search' 
+alias ei='doas emerge -av' 
+alias ess='doas emerge --sync'
 alias eu='doas emerge -avuDN @world'
 
 # nix aliases
@@ -53,8 +94,6 @@ bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -v '^?' backward-delete-char
 
-export EDITOR='nvim'
-export VISUAL='nvim'
 
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
@@ -92,7 +131,8 @@ elif [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting
 fi
 
 if [ "$(tty)" = "/dev/tty1" ]; then
-    exec dbus-run-session niri --unsupported-gpu
+    #exec dbus-run-session sway --unsupported-gpu
+    dbus-run-session niri --session
 fi
 
 # Created by `pipx` on 2026-03-05 15:29:36

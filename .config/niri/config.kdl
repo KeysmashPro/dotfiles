@@ -58,7 +58,7 @@ input {
   focus-follows-mouse max-scroll-amount="0%"
 }
 
-output "DP-1" {
+output "DP-3" {
 
   mode "1920x1080@165.003"
   //scale 1
@@ -81,13 +81,7 @@ output "DP-1" {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
 layout {
-  insert-hint {
-    color "#ffffff30"
-    //gradient from="#00ff0020" to="#0000ff20" angle=90
-  }
-
-  gaps 16
-
+  gaps 8
   // When to center a column when changing focus, options are:
   // - "never", default behavior, focusing an off-screen column will keep at the left
   //   or right edge of the screen.
@@ -134,7 +128,7 @@ layout {
     // off
 
     // How many logical pixels the ring extends out from the windows.
-    width 4
+    width 2
 
     // Colors can be set in a variety of ways:
     // - CSS named colors: "red"
@@ -264,15 +258,15 @@ screenshot-path "~/Pictures/screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // https://yalter.github.io/niri/Configuration:-Animations
 
 spawn-at-startup "swww-daemon"
-spawn-sh-at-startup "swaybg -i ~/Pictures/wallpapers/sss.jpg"
-spawn-sh-at-startup "pipewire &"
-spawn-sh-at-startup "pipewire-pulse &"
-spawn-sh-at-startup "wireplumber &"
+spawn-sh-at-startup "swaybg -i ~/Pictures/wallpapers/set.jpg"
+spawn-sh-at-startup "pipewire&"
+spawn-sh-at-startup "mpd&"
+//spawn-sh-at-startup "pipewire-pulse &"
+//spawn-sh-at-startup "wireplumber &"
 
-spawn-at-startup "wl-clip-persist" "--clipboard" "regular"
-spawn-at-startup "wl-clip-persist" "--primary" "regular"
+//spawn-at-startup "wl-clip-persist" "--clipboard" "regular"
+//spawn-at-startup "wl-clip-persist" "--primary" "regular"
 spawn-at-startup "cliphist" "watch"
-
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store" "--primary"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store" "--primary"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
@@ -282,7 +276,7 @@ spawn-sh-at-startup "xwayland-satellite"
 spawn-at-startup "waybar"
 
 animations {
-  //off
+  // off
   // slowdown 0.3
 
   workspace-switch {
@@ -352,8 +346,8 @@ window-rule {
 window-rule {
     match title="float-alacritty"
     open-floating true
-    default-column-width { fixed 880; }
-    default-window-height { fixed 640; }
+    default-column-width { fixed 640; }
+    default-window-height { fixed 420; }
 }
 
 window-rule {
@@ -402,7 +396,7 @@ binds {
 
   Mod+Shift+Slash { show-hotkey-overlay; }
 
-  Mod+E hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
+  Mod+E { spawn "alacritty"; }
   Mod+D hotkey-overlay-title="Fuzzel" { spawn-sh "pkill fuzzel || fuzzel"; }
   Mod+A { spawn-sh "pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
 
@@ -421,10 +415,12 @@ binds {
   Ctrl+3 { spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ +5%";      }
   Ctrl+4 { spawn-sh "pactl set-source-mute @DEFAULT_SOURCE@ toggle"; }
 
-  //Super+Backslash hotkey-overlay-title="Lock the Screen: swaylock" { spawn "sh" "-c" "swaylock -f -c 000000 && niri msg action power-off-monitors && doas zzz"; }
-  Super+Backspace hotkey-overlay-title="Lock the Screen: swaylock" { spawn "sh" "-c" "swaylock -f -c 000000"; }
+  Super+Backslash hotkey-overlay-title="Sleep zzz..." { spawn "sh" "-c" "swaylock -f -c 000000  && doas zzz"; }
+  Super+Backspace hotkey-overlay-title="Lock" { spawn "sh" "-c" "swaylock -f -c 000000 && niri msg action power-off-monitors"; }
   
-  Mod+G { spawn "alacritty" "--config-file" "/home/user/.config/alacritty/alacritty_float.toml" "--title" "float-alacritty"; }
+  Mod+G { spawn "alacritty" "--title" "float-alacritty"; }
+  // --config-file" "/home/user/.config/alacritty/alacritty_transparent.toml
+
 
   // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
   // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
@@ -651,7 +647,6 @@ binds {
   // Mod+Space     { switch-layout "next"; }
   // Mod+Shift+Space { switch-layout "prev"; }
 
-  Print { screenshot; }
   Ctrl+Print { screenshot-screen; }
   Alt+Print { screenshot-window; }
 
