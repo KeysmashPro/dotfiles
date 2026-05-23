@@ -18,8 +18,9 @@ export KEYTIMEOUT=1
 alias shutdown='shutdown now'
 alias poweroff='doas poweroff'
 alias reboot='doas reboot'
-alias nv='bob run nightly'
-alias dnv='doas bob run nightly'
+alias nv='nvim'
+
+# xbps aliases
 alias xi='doas xbps-install'
 alias xr='doas xbps-remove -R'
 alias xq='xbps-query'
@@ -91,11 +92,8 @@ elif [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting
 fi
 
 if [ "$(tty)" = "/dev/tty1" ]; then
-    exec dbus-run-session sway --unsupported-gpu
+    exec dbus-run-session niri --unsupported-gpu
 fi
 
 # Created by `pipx` on 2026-03-05 15:29:36
 export PATH="$PATH:/home/user/.local/bin"
-
-
-# Modified Luke Smith config file
