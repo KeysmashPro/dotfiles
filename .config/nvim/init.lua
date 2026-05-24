@@ -7,7 +7,6 @@ vim.opt.encoding=utf8
 vim.opt.winborder = "rounded"
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.showtabline = 2
 vim.opt.signcolumn = "yes"
@@ -20,56 +19,39 @@ vim.opt.undofile = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 
+vim.pack.add({
+  { src = "https://github.com/vague2k/vague.nvim" },
+  { src = "https://github.com/rose-pine/neovim" },
+  { src = "https://github.com/ellisonleao/gruvbox.nvim" },
+  { src = "https://github.com/chentoast/marks.nvim" },
+  { src = "https://github.com/danishprakash/fff.nvim" },
+  { src = "https://github.com/stevearc/oil.nvim" },
+  { src = "https://github.com/nvim-tree/nvim-tree.lua"},
+  { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+  { src = "https://github.com/mikavilpas/yazi.nvim" },
+  { src = "https://github.com/aznhe21/actions-preview.nvim" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+  { src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.8" },
+  { src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
+  { src = "https://github.com/nvim-lua/plenary.nvim" },
+  { src = "https://github.com/chomosuke/typst-preview.nvim" },
+  { src = "https://github.com/neovim/nvim-lspconfig" },
+  { src = "https://github.com/mason-org/mason.nvim" },
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
+  { src = "https://github.com/LinArcX/telescope-env.nvim" },
+  { src = "https://github.com/mfussenegger/nvim-jdtls" },
+})
+
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition' })
 vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Go to declaration' })
 vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = 'Go to references' })
 vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to implementation' })
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover documentation' })
 
-vim.keymap.set('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>n', ':set number!<CR>', { noremap = true })
-
-vim.pack.add({
-	{ src = "https://github.com/vague2k/vague.nvim" },
-  { src = "https://github.com/rose-pine/neovim" },
-  { src = "https://github.com/ellisonleao/gruvbox.nvim" },
-  { src = "https://github.com/mg979/vim-visual-multi" },
-	{ src = "https://github.com/chentoast/marks.nvim" },
-	{ src = "https://github.com/stevearc/oil.nvim" },
-  { src = "https://github.com/mikavilpas/yazi.nvim" },
-	{ src = "https://github.com/nvim-tree/nvim-tree.lua"},
-  { src = "https://github.com/nvim-tree/nvim-web-devicons" },
-  { src = "https://github.com/sontungexpt/url-open" },
-  { src = "https://github.com/mikavilpas/yazi.nvim" },
-	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter",        version = "main" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim",          version = "0.1.8" },
-	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
-	{ src = "https://github.com/nvim-lua/plenary.nvim" },
-	{ src = "https://github.com/chomosuke/typst-preview.nvim" },
-	{ src = "https://github.com/neovim/nvim-lspconfig" },
-	{ src = "https://github.com/mason-org/mason.nvim" },
-	{ src = "https://github.com/L3MON4D3/LuaSnip" },
-	{ src = "https://github.com/LinArcX/telescope-env.nvim" },
-  { src = "https://github.com/mfussenegger/nvim-jdtls" },
-  { 
-    src = "https://github.com/dmtrKovalenko/fff.nvim",
-    postinstall = function()
-        vim.defer_fn(function()
-            pcall(require("fff.download").download_or_build_binary)
-        end, 0)
-    end,
-  },
-})
-
-
--- :lua require("fff.download").download_or_build_binary()
 vim.keymap.set('n', 'ff', function() require('fff').find_files() end, { desc = 'FFFind files' })
 vim.keymap.set('n', 'fg', function() require('fff').live_grep() end, { desc = 'LiFFFe grep' })
 vim.keymap.set('n', 'fz', function() require('fff').live_grep({ grep = { modes = { 'fuzzy', 'plain' } } }) end, { desc = 'Live fffuzy grep' })
 vim.keymap.set('n', 'fc', function() require('fff').live_grep({ query = vim.fn.expand("<cword>") }) end, { desc = 'Search current word' })
-
-vim.keymap.set("n", "gk", "<cmd>lua vim.ui.open(vim.fn.expand('<cfile>'))<CR>")
 
 require "marks".setup {
 	builtin_marks = { "<", ">", "^" },
@@ -143,16 +125,6 @@ vim.lsp.enable({
 	"glsl_analyzer", "haskell-language-server", "hlint",
 	"intelephense", "biome", "tailwindcss",
 	"ts_ls", "emmet_language_server", "emmet_ls", "solargraph"
-})
-
-require("fff").setup({
-    run = function()
-        require("fff.download").download_or_build_binary()
-    end,
-    config = function()
-        vim.keymap.set("n", "ff", function() require("fff").find_files() end)
-        vim.keymap.set("n", "fg", function() require("fff").live_grep() end)
-    end,
 })
 
 require("oil").setup({
@@ -388,8 +360,8 @@ map({ "n" }, "<leader>e", "<cmd>Oil<CR>")
 map({ "n" }, "<leader>c", "1z=")
 map({ "n" }, "<C-q>", ":copen<CR>", { silent = true })
 map({ "n" }, "<leader>w", "<Cmd>update<CR>", { desc = "Write the current buffer." })
-map({ "n" }, "<leader>q", "<Cmd>:wq<CR>", { desc = "Quit the current buffer." })
-map({ "n" }, "<leader>Q", "<Cmd>:q!<CR>", { desc = "Quit all buffers and write." })
+map({ "n" }, "<leader>q", "<Cmd>:quit<CR>", { desc = "Quit the current buffer." })
+map({ "n" }, "<leader>Q", "<Cmd>:wqa<CR>", { desc = "Quit all buffers and write." })
 map({ "n" }, "<C-f>", "<Cmd>Open .<CR>", { desc = "Open current directory in Finder." })
 map({ "n" }, "<leader>a", ":edit #<CR>", { desc = "Open current directory in Finder." })
 
@@ -430,40 +402,18 @@ vim.keymap.set('v', '<A-k>', '<Up>',    { noremap = true, silent = true })
 vim.keymap.set('v', '<A-l>', '<Right>', { noremap = true, silent = true })
 
 
-
---local function make_clean_run()
---    vim.cmd('wa')
---    local cmd = 'make clean && make run'
---    vim.cmd('belowright new')
---    vim.cmd('resize ' .. math.floor(vim.o.lines * 0.15))
---    local job_id = vim.fn.termopen(cmd, {
---        on_exit = function()
---            vim.cmd('close!')
---        end
---    })
---    vim.cmd('startinsert')
---    vim.api.nvim_buf_set_keymap(0, 't', '<Esc>', '<C-\\><C-n>:close!<CR>', { noremap = true, silent = true })
---end
-
 local function make_clean_run()
-  vim.cmd('wa')
-  local cwd = vim.fn.getcwd()
-  local cmd
-
-  if vim.loop.fs_stat(cwd .. '/Cargo.toml') then
-    cmd = 'cargo run'
-  else
-    cmd = 'make clean && make run'
-  end
-
-  vim.cmd('belowright new')
-  vim.cmd('resize ' .. math.floor(vim.o.lines * 0.15))
-
-  -- убрали on_exit, который закрывал окно
-  local job_id = vim.fn.termopen(cmd)
-
-  vim.cmd('startinsert')
-  vim.api.nvim_buf_set_keymap(0, 't', '<Esc>', '<C-\\><C-n>:close!<CR>', { noremap = true, silent = true })
+    vim.cmd('wa')
+    local cmd = 'make clean && make run'
+    vim.cmd('belowright new')
+    vim.cmd('resize ' .. math.floor(vim.o.lines * 0.15))
+    local job_id = vim.fn.termopen(cmd, {
+        on_exit = function()
+            vim.cmd('close!')
+        end
+    })
+    vim.cmd('startinsert')
+    vim.api.nvim_buf_set_keymap(0, 't', '<Esc>', '<C-\\><C-n>:close!<CR>', { noremap = true, silent = true })
 end
 
 vim.api.nvim_create_user_command('MakeCleanRun', make_clean_run, {})
@@ -479,10 +429,8 @@ vim.opt.fillchars = {
     verthoriz = '┼'
 }
 
-
 vim.cmd('highlight WinSeparator ctermfg=9 ctermbg=none cterm=bold')
 
--- lsp error 
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show error under cursor' })
 
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
@@ -490,7 +438,8 @@ vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Rename symbol' }
 vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = 'Show references' })
 vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to implementation' })
 
--- lsp auto fix
+-- Auto fix
 vim.keymap.set('n', '<leader>qf', function()
     vim.lsp.buf.code_action({ apply = true })
 end, { desc = 'Apply first code action' })
+

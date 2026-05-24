@@ -3,7 +3,7 @@
   border-radius: 0px;
   font-family: "Maple Mono";
   /*font-weight: bold;*/
-  font-size: 15px;
+  font-size: 14px;
   min-height: 0;
   color: #ebdbb2;
   color: #ccc8bb;
@@ -32,11 +32,11 @@ window#waybar {
   background: #d65530;
 }
 
-/*
 #temperature {
   color: #22aa33;
 }
 
+/*
 #cpu {
   color: #dd6644;
 }

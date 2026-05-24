@@ -70,6 +70,10 @@
       "src": "https://github.com/nvim-telescope/telescope.nvim",
       "version": "'0.1.8'"
     },
+    "typst-lsp": {
+      "rev": "ebf6d6fc722dd579c2b8915182ad813445763bb7",
+      "src": "https://github.com/nvarner/typst-lsp"
+    },
     "typst-preview.nvim": {
       "rev": "bf5d5eaf23bbfcca9f98a24ed29bd084abf89bf2",
       "src": "https://github.com/chomosuke/typst-preview.nvim"

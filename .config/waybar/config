@@ -9,7 +9,7 @@
     ],
 
     "modules-right": [
-      //"custom/weather",
+      "custom/weather",
       "temperature#cpu",
       //"temperature#ssd",
       "cpu",
@@ -58,40 +58,40 @@
     },
 
     "niri/language": {
-      "format-en": "en | ",
-      "format-ru": "ru | ",
+      "format-en": "en ",
+      "format-ru": "ru ",
       "min-length": 1
-    }, 
-  
+    },
+
     "temperature#cpu": {
         "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 80,
-        "format": "{temperatureC}°C ",
+        "format": "Tea: {temperatureC}°C ",
         "interval": 2,
         "tooltip": true
-    },  
-      
+    },
+    
     "temperature#ssd": {
         "hwmon-path": "/sys/class/hwmon/hwmon0/temp1_input",
         "critical-threshold": 60,
-        "format": "ssd: {temperatureC}°C ",
+        "format": "Data: {temperatureC}°C ",
         "interval": 2,
         "tooltip": true
-    }, 
- 
-    "cpu": { 
-      "format": "| CPU: {usage}% | ",
+    },
+
+    "cpu": {
+      "format": " CPU: {usage}% | ",
       "interval": 1
     },
 
     "memory": {
-      "format": "{used:0.1f} GB | ",
+      "format": "RAM: {used:0.1f} GB | ",
       "interval": 8
     },
 
     "pulseaudio": {
-      "format": "{volume}% ⊙ | ",
-      "format-bluetooth": "{volume}%  |",
+      "format": "| vol: {volume}% | ",
+      "format-bluetooth": "| {volume}%  |",
       "format-icons": {
         "default": [
           "",
@@ -104,7 +104,7 @@
         "phone": "",
         "portable": ""
       },
-			"format-muted": "{volume}% ⊘ | ",
+      "format-muted": "| vol: x {volume}% | ",
       "on-click": "pavucontrol"
     },
 
@@ -114,22 +114,30 @@
       "interval": 1
     },
 
-    "battery": {
-			"interval": 2,
-      "format": " {capacity}% | ",
-      "format-charging": " {capacity}% | ",
+    /*"battery": {
+      "format": "{icon} {capacity}%",
+      "format-alt": "{time} {icon}",
+      "format-charging": " {capacity}%",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
       "states": {
         "critical": 1,
-        "warning": 6
+        "warning": 30
       }
     },
 
     "custom/weather": {
       "class": "weather",
       "exec": "curl -s 'wttr.in/Yekaterinburg?format=%c%t'",
-      "format": "[Yekaterinburg: {}] . . .    ",
+      "format": "[Yekaterinburg: {}] . . . ",
       "interval": 300
     },
+    */
 
     "tray": {
       "icon-size": 16,
