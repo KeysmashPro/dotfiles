@@ -443,3 +443,59 @@ vim.keymap.set('n', '<leader>qf', function()
     vim.lsp.buf.code_action({ apply = true })
 end, { desc = 'Apply first code action' })
 
+
+
+
+
+local function compile_and_run()
+    vim.cmd('update')
+    
+    local file = vim.fn.expand('%:p')
+    local ext = vim.fn.expand('%:e')
+    local name = vim.fn.expand('%:t:r')
+    local cmd = ""
+
+    if ext == 'cpp' or ext == 'cc' or ext == 'cxx' then
+        cmd = string.format('g++ -std=c++17 -O2 -Wall %s -o %s && ./%s', 
+            vim.fn.shellescape(file), 
+            vim.fn.shellescape(name), 
+            vim.fn.shellescape(name))
+            
+    elseif ext == 'c' then
+        cmd = string.format('gcc -std=c11 -O2 -Wall %s -o %s && ./%s', 
+            vim.fn.shellescape(file), 
+            vim.fn.shellescape(name), 
+            vim.fn.shellescape(name))
+            
+    elseif ext == 'py' then
+        cmd = string.format('python3 %s', vim.fn.shellescape(file))
+        
+    elseif ext == 'sh' or ext == 'bash' then
+        cmd = string.format('bash %s', vim.fn.shellescape(file))
+        
+    else
+        vim.notify("Unsupported file type for run: " .. ext, vim.log.levels.WARN)
+        return
+    end
+
+    local full_cmd = cmd .. '; printf "\\n[Finished. Press ENTER to close...]\\n"; read'
+
+    vim.cmd('botright 15split | enew')
+    local buf = vim.api.nvim_get_current_buf()
+    
+    vim.fn.termopen({'bash', '-c', full_cmd}, {
+        on_exit = function()
+            vim.schedule(function()
+                if vim.api.nvim_buf_is_valid(buf) then
+                    vim.cmd('close!')
+                end
+            end)
+        end
+    })
+    
+    vim.cmd('startinsert')
+    
+    vim.api.nvim_buf_set_keymap(buf, 't', '<Esc>', '<C-\\><C-n>:close!<CR>', { noremap = true, silent = true })
+end
+
+vim.keymap.set('n', '<leader>r', compile_and_run, { noremap = true, silent = true, desc = 'Compile/Run current file' })

@@ -13,7 +13,7 @@
       "temperature#cpu",
       //"temperature#ssd",
       "cpu",
-      "memory",
+      //"memory",
       "niri/language",
       "pulseaudio",
       "battery",
@@ -107,7 +107,6 @@
       "format-muted": "| vol: x {volume}% | ",
       "on-click": "pavucontrol"
     },
-
 
     "clock": {
       "format": "{:%Y %b-%d %a %H:%M:%S |}",

@@ -16,9 +16,15 @@ smart_pwd() {
 }
 
 
+LS_COLORS="di=38;2;240;120;80:fi=0:*.jpg=38;2;90;140;200:*.jpeg=38;2;90;140;200:*.jxl=38;2;90;140;200
+          .png=38;2;90;140;200:*.gif=38;2;90;140;200:*.bmp=38;2;90;140;200:*
+          .svg=38;2;90;140;200:*.pdf=38;2;200;200;200"
+export LS_COLORS
+
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
+export GPG_TTY=$(tty)
 
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -39,6 +45,8 @@ alias poweroff='doas poweroff'
 alias xi='doas xbps-install'
 alias xr='doas xbps-remove'
 alias xq='xbps-query'
+alias cat='bat'
+#alias ls='ls --color=auto -X'
 
 # git aliases
 alias gs='git status --short'
