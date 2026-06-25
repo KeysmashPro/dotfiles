@@ -40,6 +40,7 @@ export VISUAL='nvim'
 
 # aliases
 alias nv='nvim'
+alias de='doasedit'
 alias reboot='doas reboot'
 alias poweroff='doas poweroff'
 alias xi='doas xbps-install'

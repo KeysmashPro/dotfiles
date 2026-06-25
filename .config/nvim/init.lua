@@ -1,8 +1,9 @@
-vim.cmd([[set mouse=a]])
 vim.cmd([[set noswapfile]])
 
 vim.opt.clipboard=unnamedplus
 vim.opt.encoding=utf8
+
+vim.g.mapleader = " "
 
 vim.opt.winborder = "rounded"
 vim.opt.expandtab = true
@@ -19,10 +20,12 @@ vim.opt.undofile = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 
+
 vim.pack.add({
   { src = "https://github.com/vague2k/vague.nvim" },
   { src = "https://github.com/rose-pine/neovim" },
   { src = "https://github.com/ellisonleao/gruvbox.nvim" },
+  { src = "https://github.com/folke/snacks.nvim", },
   { src = "https://github.com/chentoast/marks.nvim" },
   { src = "https://github.com/danishprakash/fff.nvim" },
   { src = "https://github.com/stevearc/oil.nvim" },
@@ -42,11 +45,11 @@ vim.pack.add({
   { src = "https://github.com/mfussenegger/nvim-jdtls" },
 })
 
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition' })
-vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Go to declaration' })
-vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = 'Go to references' })
-vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to implementation' })
-vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover documentation' })
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+vim.keymap.set('n', 'gD', vim.lsp.buf.declaration)
+vim.keymap.set('n', 'gr', vim.lsp.buf.references)
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation)
+vim.keymap.set('n', 'K' , vim.lsp.buf.hover)
 
 vim.keymap.set('n', 'ff', function() require('fff').find_files() end, { desc = 'FFFind files' })
 vim.keymap.set('n', 'fg', function() require('fff').live_grep() end, { desc = 'LiFFFe grep' })
@@ -63,6 +66,24 @@ require "marks".setup {
 }
 
 local default_color = "vague"
+
+require("snacks").setup({
+    terminal = {
+        enabled = true,
+        win = {
+            style = "bottom",
+            height = 12,
+            wo = {
+                winbar = "",
+            },
+        },
+    },
+    bigfile = { enabled = false },
+    notifier = { enabled = false },
+    quickfile = { enabled = false },
+    statuscolumn = { enabled = false },
+    words = { enabled = false },
+})
 
 require "mason".setup()
 
@@ -245,7 +266,6 @@ local builtin = require("telescope.builtin")
 local map = vim.keymap.set
 local current = 1
 
-vim.g.mapleader = " "
 
 map({ "n", "x" }, "<leader>y", '"+y')
 map({ "n", "x" }, "<leader>d", '"+d')
@@ -331,7 +351,6 @@ map({ "n", "v", "x" }, "<leader>O", "<Cmd>restart<CR>", { desc = "Restart vim." 
 map({ "n", "v", "x" }, "<C-s>", [[:s/\V]], { desc = "Enter substitue mode in selection" })
 map({ "n", "v", "x" }, "<leader>lf", vim.lsp.buf.format, { desc = "Format current buffer" })
 map({ "v", "x", "n" }, "<C-y>", '"+y', { desc = "System clipboard yank." })
-map({ "n" }, "<leader>f", builtin.find_files, { desc = "Telescope live grep" })
 
 function git_files() builtin.find_files({ no_ignore = true }) end
 
@@ -401,24 +420,6 @@ vim.keymap.set('v', '<A-j>', '<Down>',  { noremap = true, silent = true })
 vim.keymap.set('v', '<A-k>', '<Up>',    { noremap = true, silent = true })
 vim.keymap.set('v', '<A-l>', '<Right>', { noremap = true, silent = true })
 
-
-local function make_clean_run()
-    vim.cmd('wa')
-    local cmd = 'make clean && make run'
-    vim.cmd('belowright new')
-    vim.cmd('resize ' .. math.floor(vim.o.lines * 0.15))
-    local job_id = vim.fn.termopen(cmd, {
-        on_exit = function()
-            vim.cmd('close!')
-        end
-    })
-    vim.cmd('startinsert')
-    vim.api.nvim_buf_set_keymap(0, 't', '<Esc>', '<C-\\><C-n>:close!<CR>', { noremap = true, silent = true })
-end
-
-vim.api.nvim_create_user_command('MakeCleanRun', make_clean_run, {})
-vim.keymap.set('n', '<leader><CR>', make_clean_run, { noremap = true, silent = true })
-
 vim.opt.fillchars = {
     horiz = '─',
     horizup = '┬',
@@ -433,69 +434,152 @@ vim.cmd('highlight WinSeparator ctermfg=9 ctermbg=none cterm=bold')
 
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show error under cursor' })
 
-vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
-vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Rename symbol' })
-vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = 'Show references' })
-vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to implementation' })
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action)
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
+vim.keymap.set('n', 'gr', vim.lsp.buf.references)
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation)
 
 -- Auto fix
-vim.keymap.set('n', '<leader>qf', function()
+vim.keymap.set('n', '<leader>f', function()
     vim.lsp.buf.code_action({ apply = true })
 end, { desc = 'Apply first code action' })
 
+-- Ai slop run commands
 
+local function get_project_root()
+    local markers = { '.git', 'Makefile', 'CMakeLists.txt', 'meson.build', 'build.zig', 'Cargo.toml' }
+    local root_path = vim.fs.find(markers, { upward = true })[1]
+    return root_path and vim.fs.dirname(root_path) or vim.fn.getcwd()
+end
 
+local function get_run_command()
+    local file = vim.fn.expand('%:p')
+    local ext = vim.fn.expand('%:e')
 
+    if ext == 'cpp' or ext == 'cc' or ext == 'cxx' then
+        return string.format('clang++ -std=c++17 -O2 -ffast-math -flto -Wall %s -o run && script -qfc "./run" /dev/null', vim.fn.shellescape(file))
+    elseif ext == 'c' then
+        return string.format('tcc -O1 -Wall %s -o run && script -qfc "./run" /dev/null', vim.fn.shellescape(file))
+    elseif ext == 'rs' then
+        return string.format('rustc -O %s -o run && script -qfc "./run" /dev/null', vim.fn.shellescape(file))
+    elseif ext == 'zig' then
+        return string.format('zig build-exe %s -O ReleaseFast && script -qfc "./%s" /dev/null', vim.fn.shellescape(file), vim.fn.expand('%:t:r'))
+    elseif ext == 'go' then
+        return string.format('go build -o run %s && script -qfc "./run" /dev/null', vim.fn.shellescape(file))
+    elseif ext == 'py' then
+        return string.format('script -qfc "python3 -u %s" /dev/null', vim.fn.shellescape(file))
+    elseif ext == 'sh' or ext == 'bash' then
+        return string.format('script -qfc "%s %s" /dev/null', vim.o.shell, vim.fn.shellescape(file))
+    elseif ext == 'lua' then
+        return string.format('script -qfc "lua %s" /dev/null', vim.fn.shellescape(file))
+    end
+    return nil
+end
+
+local function get_build_command()
+    local root = get_project_root()
+    
+    if vim.fn.filereadable(root .. '/Cargo.toml') == 1 then
+        return 'script -qfc "cargo run" /dev/null'
+    elseif vim.fn.filereadable(root .. '/Makefile') == 1 then
+        return 'script -qfc "make clean && make run" /dev/null'
+    elseif vim.fn.filereadable(root .. '/build.zig') == 1 then
+        return 'script -qfc "zig build run" /dev/null'
+    elseif vim.fn.filereadable(root .. '/meson.build') == 1 then
+        return 'script -qfc "meson setup build && meson compile -C build" /dev/null'
+    elseif vim.fn.filereadable(root .. '/CMakeLists.txt') == 1 then
+        return 'script -qfc "mkdir -p build && cd build && cmake .. && cmake --build ." /dev/null'
+    end
+    return nil
+end
+
+local function kill_process_tree(pid)
+    if not pid or pid <= 0 then return end
+    pcall(vim.fn.system, string.format("kill -9 -%d 2>/dev/null || true", pid))
+    pcall(vim.fn.system, string.format("pkill -9 -P %d 2>/dev/null || true", pid))
+end
+
+local function kill_old_terminals()
+    for _, term in ipairs(Snacks.terminal.list()) do
+        pcall(function()
+            local pid = term:pid()
+            if pid and pid > 0 then kill_process_tree(pid) end
+            term:close(true)
+        end)
+    end
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "terminal" then
+            local job_id = vim.bo[buf].channel
+            if job_id and job_id > 0 then
+                local ok, pid = pcall(vim.fn.jobpid, job_id)
+                if ok and pid and pid > 0 then kill_process_tree(pid) end
+                pcall(vim.fn.jobstop, job_id)
+            end
+            pcall(vim.api.nvim_buf_delete, buf, { force = true })
+        end
+    end
+    vim.wait(100)
+end
+
+local function open_terminal(cmd, cwd)
+    kill_old_terminals()
+    Snacks.terminal(cmd, {
+        cwd = cwd,
+        win = { position = "bottom", height = 12, border = "none" },
+        start_insert = true,
+        auto_close = false,
+    })
+end
 
 local function compile_and_run()
     vim.cmd('update')
-    
-    local file = vim.fn.expand('%:p')
-    local ext = vim.fn.expand('%:e')
-    local name = vim.fn.expand('%:t:r')
-    local cmd = ""
-
-    if ext == 'cpp' or ext == 'cc' or ext == 'cxx' then
-        cmd = string.format('g++ -std=c++17 -O2 -Wall %s -o %s && ./%s', 
-            vim.fn.shellescape(file), 
-            vim.fn.shellescape(name), 
-            vim.fn.shellescape(name))
-            
-    elseif ext == 'c' then
-        cmd = string.format('gcc -std=c11 -O2 -Wall %s -o %s && ./%s', 
-            vim.fn.shellescape(file), 
-            vim.fn.shellescape(name), 
-            vim.fn.shellescape(name))
-            
-    elseif ext == 'py' then
-        cmd = string.format('python3 %s', vim.fn.shellescape(file))
-        
-    elseif ext == 'sh' or ext == 'bash' then
-        cmd = string.format('bash %s', vim.fn.shellescape(file))
-        
-    else
-        vim.notify("Unsupported file type for run: " .. ext, vim.log.levels.WARN)
+    local cmd = get_run_command()
+    if not cmd then
+        vim.notify("Unsupported file type: " .. vim.fn.expand('%:e'), vim.log.levels.WARN)
         return
     end
-
-    local full_cmd = cmd .. '; printf "\\n[Finished. Press ENTER to close...]\\n"; read'
-
-    vim.cmd('botright 15split | enew')
-    local buf = vim.api.nvim_get_current_buf()
-    
-    vim.fn.termopen({'bash', '-c', full_cmd}, {
-        on_exit = function()
-            vim.schedule(function()
-                if vim.api.nvim_buf_is_valid(buf) then
-                    vim.cmd('close!')
-                end
-            end)
-        end
-    })
-    
-    vim.cmd('startinsert')
-    
-    vim.api.nvim_buf_set_keymap(buf, 't', '<Esc>', '<C-\\><C-n>:close!<CR>', { noremap = true, silent = true })
+    open_terminal(cmd, vim.fn.expand('%:p:h'))
 end
 
-vim.keymap.set('n', '<leader>r', compile_and_run, { noremap = true, silent = true, desc = 'Compile/Run current file' })
+local function build_project()
+    vim.cmd('update')
+    local cmd = get_build_command()
+    if not cmd then
+        vim.notify("No build system found", vim.log.levels.WARN)
+        return
+    end
+    open_terminal(cmd, get_project_root())
+end
+
+vim.keymap.set('n', '<leader>r', compile_and_run, { noremap = true, silent = true, desc = 'Compile & Run current file' })
+vim.keymap.set('n', '<leader><CR>', build_project, { noremap = true, silent = true, desc = 'Build project' })
+
+vim.api.nvim_create_autocmd("TermOpen", {
+    callback = function()
+        local buf = vim.api.nvim_get_current_buf()
+        
+        local kill_terminal = function()
+            local job_id = vim.bo[buf].channel
+            if job_id and job_id > 0 then
+                local ok, pid = pcall(vim.fn.jobpid, job_id)
+                if ok and pid and pid > 0 then kill_process_tree(pid) end
+                pcall(vim.fn.jobstop, job_id)
+            end
+            vim.cmd('bwipeout!')
+        end
+        
+        vim.keymap.set({ 'n', 't' }, '<leader>q', kill_terminal, { buffer = buf, silent = true })
+        vim.keymap.set('n', 'q', kill_terminal, { buffer = buf, silent = true })
+        vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { buffer = buf, silent = true })
+        
+        vim.api.nvim_create_autocmd("TermClose", {
+            buffer = buf,
+            callback = function()
+                if vim.api.nvim_get_mode().mode == 't' then
+                    vim.cmd('stopinsert')
+                end
+            end,
+        })
+    end,
+})

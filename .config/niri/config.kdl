@@ -81,6 +81,8 @@ output "DP-1" {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
 layout {
+  background-color "transparent"
+
   insert-hint {
     color "#ffffff30"
     //gradient from="#00ff0020" to="#0000ff20" angle=90
@@ -263,7 +265,25 @@ screenshot-path "~/Pictures/screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // The wiki explains how to configure individual animations:
 // https://yalter.github.io/niri/Configuration:-Animations
 
-spawn-sh-at-startup "swaybg -i ~/Pictures/wallpapers/sss.jpg"
+spawn-sh-at-startup "swaybg -i ~/Pictures/wallpapers/draw.jpg"
+//spawn-sh-at-startup "swaybg -i ~/Pictures/wallpapers/sss.jpg -m fill --namespace backdrop"
+
+
+//spawn-sh-at-startup "swww-daemon"
+//spawn-sh-at-startup "swww img ~/Pictures/wallpapers/draw.jpg --transition-type none"
+
+
+layer-rule {
+    match namespace="^wallpaper$"
+    place-within-backdrop true
+}
+
+overview {
+    workspace-shadow {
+        off
+    }
+}
+
 spawn-sh-at-startup "pipewire"
 spawn-sh-at-startup "pipewire-pulse"
 spawn-sh-at-startup "wireplumber"
