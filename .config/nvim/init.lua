@@ -7,9 +7,9 @@ vim.g.mapleader = " "
 
 vim.opt.winborder = "rounded"
 vim.opt.expandtab = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.showtabline = 2
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.showtabline = 4
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
 vim.opt.cursorcolumn = false
@@ -440,7 +440,7 @@ vim.keymap.set('n', 'gr', vim.lsp.buf.references)
 vim.keymap.set('n', 'gi', vim.lsp.buf.implementation)
 
 -- Auto fix
-vim.keymap.set('n', '<leader>f', function()
+vim.keymap.set('n', '<leader>v', function()
     vim.lsp.buf.code_action({ apply = true })
 end, { desc = 'Apply first code action' })
 
@@ -482,7 +482,7 @@ local function get_build_command()
     if vim.fn.filereadable(root .. '/Cargo.toml') == 1 then
         return 'script -qfc "cargo run" /dev/null'
     elseif vim.fn.filereadable(root .. '/Makefile') == 1 then
-        return 'script -qfc "make clean && make run" /dev/null'
+        return 'script -qfc "make run" /dev/null'
     elseif vim.fn.filereadable(root .. '/build.zig') == 1 then
         return 'script -qfc "zig build run" /dev/null'
     elseif vim.fn.filereadable(root .. '/meson.build') == 1 then

@@ -381,6 +381,12 @@ window-rule {
   // center-column true
 }
 
+window-rule {
+    match title="UCP"
+    open-floating true
+}
+
+
 // Open the Firefox picture-in-picture player as floating by default.
 window-rule {
   // This app-id regular expression will work for both:
